@@ -19,11 +19,13 @@ public class MainDialog : IDialog<BasicForm>
         context.Wait(MessageReceivedAsync);
         return Task.CompletedTask;
     }
-    private string m;
+    private string mid;
+    private string mname;
     public virtual async Task MessageReceivedAsync(IDialogContext context, IAwaitable<IMessageActivity> argument)
     {
         var message = await argument;
-        m = message;
+        mid = message.From.Id;
+        mname = message.From.Name;
         context.Call(BasicForm.BuildFormDialog(FormOptions.PromptInStart), FormComplete);
     }
 
@@ -35,8 +37,7 @@ public class MainDialog : IDialog<BasicForm>
             if (form != null)
             {
                 await context.PostAsync($"Thanks for completing the form! Just type anything to restart it");
-                await context.PostAsync($"{m}");
-                await context.PostAsync($"{form}");
+                await context.PostAsync($"{mid}, {mname}");
 
             }
             else
